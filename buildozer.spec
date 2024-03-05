@@ -7,7 +7,7 @@ title = BA Perk Tracker
 package.name = ba_perk_tracker
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = org.barpg
 
 # (str) Source code where the main.py live
 source.dir = .
