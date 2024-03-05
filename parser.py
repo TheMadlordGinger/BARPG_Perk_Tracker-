@@ -117,10 +117,11 @@ def find_tiers_index(text):
     tier_defs = {"I":1, "II": 2, "III": 3, "0": 0}
     for t in tier_defs:
         try:
-            pattern = re.compile(f"\nTier {t} .*? Perks\n")
+            search_text= f'\nTier {t} .*? Perks\n';
+            pattern = re.compile(search_text)
             tiers.append((re.search(pattern, text).start(), tier_defs[t]))
-        except:
-            print(f"Missed Tier {t}")
+        except Exception as e:
+            print(f"Missed Tier {t}",e)
     tiers.append((len(text),-1))
     return tiers
 
@@ -152,7 +153,7 @@ def parse_perks_in_link(link):
 def parse_table_of_links(link):
     content = get_link_content(link)
     text = re.findall(text_block_regex, content)
-    
+ 
     text = sanitize_text(text[0][1])
     links = re.findall('"si":[0-9]*,"ei":[0-9]*,"sm":{"lnks_link":{"lnk_type":0,"ulnk_url":".*?"', content)
     a_links = []
@@ -175,12 +176,23 @@ def filter_perks(all_perks):
     for p in all_perks:
         if p.desc == "":
             continue
-        if "Secret" in p.tags:
-            continue
         result.append(p)
     return result
+    
+def find_all_tags(all_perks):
+    tags = []
+    for p in all_perks:
+        for t in p.tags:
+            if not t in tags:
+                tags.append(t)
+    tags.sort()
+    return tags
 
 toc = Link("main", "https://docs.google.com/document/d/1iFkb8gB4nXb0eyp7sOXtdEjaK6TpxNyZBOU4fUl456g")
 all_perks = parse_table_of_links(toc)
 all_perks = filter_perks(all_perks)
-print(len(all_perks))
+all_tags = find_all_tags(all_perks);
+
+if __name__ == '__main__':
+    print(len(all_perks))
+    print(all_tags)
