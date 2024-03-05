@@ -10,6 +10,8 @@ from kivy.uix.popup import Popup
 from kivy.graphics import Color, Rectangle
 from kivy.lang.builder import Builder
 
+from kivy.core.window import Window
+
 import parser
 
 class BGLabel(Label):
@@ -56,7 +58,6 @@ class PerkButton(Button):
 
 class MyApp(App):
     def build(self):
-        print("x")
         layout = BoxLayout(orientation='vertical')
         header = BGLabel(text='BARPG Perks', size_hint=(1,.1))
         header.set_bg((0, 0 ,1))
@@ -78,5 +79,5 @@ class MyApp(App):
 
 if __name__ == '__main__':
     MyApp().run()
-
+    Window.close()
 
