@@ -114,17 +114,13 @@ def sanitize_text(text):
 
 def find_tiers_index(text):
     tiers = [(0,-1)]
-    pattern_1 = re.compile("\nTier I .*? Perks\n")
-    tiers.append((re.search(pattern_1, text).start(), 1))
-    pattern_2 = re.compile("\nTier II .*? Perks\n")
-    tiers.append((re.search(pattern_2, text).start(), 2))
-    pattern_3 = re.compile("\nTier III .*? Perks\n")
-    tiers.append((re.search(pattern_3, text).start(), 3))
-    try:
-        pattern_0 = re.compile("\nTier 0 .*? Perks\n")
-        tiers.append((re.search(pattern_0, text).start(), 0))
-    except:
-        pass
+    tier_defs = {"I":1, "II": 2, "III": 3, "0": 0}
+    for t in tier_defs:
+        try:
+            pattern = re.compile(f"\nTier {t} .*? Perks\n")
+            tiers.append((re.search(pattern, text).start(), tier_defs[t]))
+        except:
+            print(f"Missed Tier {t}")
     tiers.append((len(text),-1))
     return tiers
 
@@ -177,7 +173,7 @@ def parse_table_of_links(link):
 def filter_perks(all_perks):
     result = [];
     for p in all_perks:
-        if p.name == "8+":
+        if p.desc == "":
             continue
         if "Secret" in p.tags:
             continue
